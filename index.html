@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeeWoo · 每日进度</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --ink: #1f2328;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #2563eb;
+    --warm: #b45309;
+    --green: #16a34a;
+    --red: #dc2626;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; padding: 24px 18px 60px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+  header h1 { font-size: 22px; margin: 0; letter-spacing: .5px; }
+  .date { color: var(--muted); font-size: 13px; }
+  .streak {
+    display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--line);
+    border-radius: 999px; padding: 8px 14px; font-size: 14px; margin-bottom: 20px; width: fit-content;
+  }
+  .streak .flame { font-size: 16px; }
+  .streak b { color: var(--warm); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { margin: 0 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: 1px; }
+  .today-task { border: 2px solid var(--accent); background: #eff6ff; }
+  .today-task .task { font-size: 22px; font-weight: 700; margin: 8px 0 4px; }
+  .today-task .sub { color: var(--muted); font-size: 14px; }
+  .week-list { margin: 0; padding: 0; list-style: none; }
+  .week-list li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 15px; display: flex; gap: 8px; }
+  .week-list li:last-child { border-bottom: none; }
+  .week-list .check { color: var(--muted); }
+  .log { margin: 0; padding: 0; list-style: none; }
+  .log li { padding: 7px 0; font-size: 14px; display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); }
+  .log li:last-child { border-bottom: none; }
+  .log .done { color: var(--green); }
+  .log .pending { color: var(--warm); }
+  .rules { font-size: 13px; color: var(--muted); }
+  .rules ol { margin: 8px 0 0; padding-left: 20px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>BeeWoo 每日进度</h1>
+    <span class="date">2026-11-12</span>
+  </header>
+
+  <div class="streak">
+    <span class="flame">🔥</span>
+    <span>连续打卡 <b>0</b> 天</span>
+  </div>
+
+  <div class="card today-task">
+    <h2>今天唯一任务</h2>
+    <div class="task">六级 · 背单词 + 做一套题</div>
+    <div class="sub">12 月就考，这是离你最近、最该动的一件。25 分钟起步。</div>
+  </div>
+
+  <div class="card">
+    <h2>本周目标（11-10 ~ 11-16）</h2>
+    <ul class="week-list">
+      <li><span class="check">□</span> 六级：每天 25 分钟（背单词 / 做题）</li>
+      <li><span class="check">□</span> 期末：电分不缺课，保持住</li>
+      <li><span class="check">□</span> 副线：闲鱼重新上架「网页制作」，主动问一个客户</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>打卡记录</h2>
+    <ul class="log">
+      <li><span>11-12</span><span class="pending">进行中</span></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>每日闭环（就 4 步）</h2>
+    <div class="rules">
+      <ol>
+        <li>固定一个时间（比如晚饭后 8 点）</li>
+        <li>手机物理隔离：锁柜子 / 交给舍友 / 放另一个房间</li>
+        <li>做「今天唯一任务」25 分钟</li>
+        <li>回来跟我打卡，我更新这页</li>
+      </ol>
+    </div>
+  </div>
+
+  <footer>BeeWoo 每日进度 · 主线：考研是保底，赚大钱是天花板</footer>
+</div>
+</body>
+</html>
