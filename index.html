@@ -2,19 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>BeeWoo · 每日进度</title>
 <style>
   :root {
-    --bg: #f7f7f5;
-    --card: #ffffff;
-    --ink: #1f2328;
-    --muted: #6b7280;
-    --line: #e5e7eb;
-    --accent: #2563eb;
-    --warm: #b45309;
-    --green: #16a34a;
-    --red: #dc2626;
+    --bg: #f7f7f5; --card: #fff; --ink: #1f2328; --muted: #6b7280;
+    --line: #e5e7eb; --accent: #2563eb; --warm: #b45309; --green: #16a34a;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
@@ -23,31 +16,46 @@
     line-height: 1.6; -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 520px; margin: 0 auto; padding: 24px 18px 60px; }
-  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
   header h1 { font-size: 22px; margin: 0; letter-spacing: .5px; }
   .date { color: var(--muted); font-size: 13px; }
   .streak {
-    display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid var(--line);
-    border-radius: 999px; padding: 8px 14px; font-size: 14px; margin-bottom: 20px; width: fit-content;
+    display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line);
+    border-radius: 999px; padding: 10px 16px; font-size: 15px; margin-bottom: 18px; width: fit-content;
   }
-  .streak .flame { font-size: 16px; }
-  .streak b { color: var(--warm); }
+  .streak b { color: var(--warm); font-size: 18px; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-  .card h2 { margin: 0 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: 1px; }
-  .today-task { border: 2px solid var(--accent); background: #eff6ff; }
-  .today-task .task { font-size: 22px; font-weight: 700; margin: 8px 0 4px; }
-  .today-task .sub { color: var(--muted); font-size: 14px; }
+  .card h2 { margin: 0 0 8px; font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 1.5px; }
+  .today-task { border: 2px solid var(--accent); }
+  .today-task .task { font-size: 22px; font-weight: 700; margin: 4px 0 4px; }
+  .today-task .sub { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .btn {
+    display: block; width: 100%; padding: 16px; border: none; border-radius: 12px;
+    font-size: 18px; font-weight: 700; cursor: pointer; transition: transform .05s, background .2s;
+    color: #fff; background: var(--accent);
+  }
+  .btn:active { transform: scale(.98); }
+  .btn.done { background: var(--green); }
   .week-list { margin: 0; padding: 0; list-style: none; }
-  .week-list li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 15px; display: flex; gap: 8px; }
-  .week-list li:last-child { border-bottom: none; }
-  .week-list .check { color: var(--muted); }
+  .week-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid var(--line); cursor: pointer; font-size: 15px;
+  }
+  .week-item:last-child { border-bottom: none; }
+  .box {
+    width: 26px; height: 26px; border: 2px solid var(--muted); border-radius: 7px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #fff; transition: all .15s;
+  }
+  .week-item.on .box { background: var(--green); border-color: var(--green); }
+  .week-item.on span.txt { color: var(--muted); text-decoration: line-through; }
   .log { margin: 0; padding: 0; list-style: none; }
   .log li { padding: 7px 0; font-size: 14px; display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); }
   .log li:last-child { border-bottom: none; }
-  .log .done { color: var(--green); }
-  .log .pending { color: var(--warm); }
+  .log .ok { color: var(--green); }
   .rules { font-size: 13px; color: var(--muted); }
   .rules ol { margin: 8px 0 0; padding-left: 20px; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 10px; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 30px; }
 </style>
 </head>
@@ -56,34 +64,31 @@
 
   <header>
     <h1>BeeWoo 每日进度</h1>
-    <span class="date">2026-11-12</span>
+    <span class="date" id="date"></span>
   </header>
 
-  <div class="streak">
-    <span class="flame">🔥</span>
-    <span>连续打卡 <b>0</b> 天</span>
-  </div>
+  <div class="streak"><span>🔥</span><span>连续打卡</span><b id="streakNum">0</b><span>天</span></div>
 
   <div class="card today-task">
-    <h2>今天唯一任务</h2>
+    <h2>今天唯一任务 · 最后更新 2026-11-12</h2>
     <div class="task">六级 · 背单词 + 做一套题</div>
     <div class="sub">12 月就考，这是离你最近、最该动的一件。25 分钟起步。</div>
+    <button class="btn" id="todayBtn">✅ 完成今天</button>
+    <div class="hint" id="todayHint"></div>
   </div>
 
   <div class="card">
     <h2>本周目标（11-10 ~ 11-16）</h2>
-    <ul class="week-list">
-      <li><span class="check">□</span> 六级：每天 25 分钟（背单词 / 做题）</li>
-      <li><span class="check">□</span> 期末：电分不缺课，保持住</li>
-      <li><span class="check">□</span> 副线：闲鱼重新上架「网页制作」，主动问一个客户</li>
+    <ul class="week-list" id="weekList">
+      <li class="week-item" data-id="cet6"><span class="box">✓</span><span class="txt">六级：每天 25 分钟（背单词 / 做题）</span></li>
+      <li class="week-item" data-id="dianfen"><span class="box">✓</span><span class="txt">期末：电分不缺课，保持住</span></li>
+      <li class="week-item" data-id="xianyu"><span class="box">✓</span><span class="txt">副线：闲鱼重新上架「网页制作」，主动问一个客户</span></li>
     </ul>
   </div>
 
   <div class="card">
     <h2>打卡记录</h2>
-    <ul class="log">
-      <li><span>11-12</span><span class="pending">进行中</span></li>
-    </ul>
+    <ul class="log" id="log"></ul>
   </div>
 
   <div class="card">
@@ -93,12 +98,103 @@
         <li>固定一个时间（比如晚饭后 8 点）</li>
         <li>手机物理隔离：锁柜子 / 交给舍友 / 放另一个房间</li>
         <li>做「今天唯一任务」25 分钟</li>
-        <li>回来跟我打卡，我更新这页</li>
+        <li>点上面的「完成今天」</li>
       </ol>
     </div>
   </div>
 
-  <footer>BeeWoo 每日进度 · 主线：考研是保底，赚大钱是天花板</footer>
+  <footer>BeeWoo 每日进度 · 主线：考研是保底，赚大钱是天花板<br>手机勾选只存在你本机，不会同步；正式打卡仍回 Claude 说一句</footer>
 </div>
+
+<script>
+  var STORE = 'beewoo-daily-v1';
+  var WEEK_KEY = '2026-11-10';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; }
+  }
+  function save(s) { localStorage.setItem(STORE, JSON.stringify(s)); }
+  function dstr(d) {
+    var m = d.getMonth()+1, day = d.getDate();
+    return d.getFullYear()+'-'+(m<10?'0'+m:m)+'-'+(day<10?'0'+day:day);
+  }
+  function calcStreak(completed) {
+    var set = {}; (completed||[]).forEach(function(x){ set[x]=1; });
+    var d = new Date(), n = 0;
+    if (!set[dstr(d)]) d.setDate(d.getDate()-1);
+    while (set[dstr(d)]) { n++; d.setDate(d.getDate()-1); }
+    return n;
+  }
+
+  var state = load();
+  if (!state.completed) state.completed = [];
+  if (!state.weeks) state.weeks = {};
+  if (!state.weeks[WEEK_KEY]) state.weeks[WEEK_KEY] = {};
+
+  // 日期显示
+  document.getElementById('date').textContent = dstr(new Date());
+  document.getElementById('streakNum').textContent = calcStreak(state.completed);
+
+  // 今天完成状态
+  var today = dstr(new Date());
+  var isTodayDone = state.completed.indexOf(today) >= 0;
+  var todayBtn = document.getElementById('todayBtn');
+  var todayHint = document.getElementById('todayHint');
+  function renderToday() {
+    if (isTodayDone) {
+      todayBtn.textContent = '✅ 已完成，点此撤销';
+      todayBtn.classList.add('done');
+      todayHint.textContent = '今天已打卡。继续保持。';
+    } else {
+      todayBtn.textContent = '✅ 完成今天';
+      todayBtn.classList.remove('done');
+      todayHint.textContent = '';
+    }
+  }
+  renderToday();
+  todayBtn.addEventListener('click', function() {
+    if (isTodayDone) {
+      var i = state.completed.indexOf(today);
+      if (i >= 0) state.completed.splice(i, 1);
+      isTodayDone = false;
+    } else {
+      state.completed.push(today);
+      isTodayDone = true;
+    }
+    save(state);
+    document.getElementById('streakNum').textContent = calcStreak(state.completed);
+    renderToday();
+    renderLog();
+  });
+
+  // 本周目标
+  var weekList = document.getElementById('weekList');
+  Array.prototype.forEach.call(weekList.children, function(li) {
+    var id = li.getAttribute('data-id');
+    li.classList.toggle('on', !!state.weeks[WEEK_KEY][id]);
+    li.addEventListener('click', function() {
+      state.weeks[WEEK_KEY][id] = !state.weeks[WEEK_KEY][id];
+      save(state);
+      li.classList.toggle('on', !!state.weeks[WEEK_KEY][id]);
+    });
+  });
+
+  // 打卡记录
+  var log = document.getElementById('log');
+  function renderLog() {
+    var days = state.completed.slice().sort().reverse().slice(0, 14);
+    log.innerHTML = '';
+    if (days.length === 0) {
+      log.innerHTML = '<li><span>还没有记录</span><span class="ok">从今天开始</span></li>';
+      return;
+    }
+    days.forEach(function(d) {
+      var li = document.createElement('li');
+      li.innerHTML = '<span>'+d+'</span><span class="ok">✓ 完成</span>';
+      log.appendChild(li);
+    });
+  }
+  renderLog();
+</script>
 </body>
 </html>
